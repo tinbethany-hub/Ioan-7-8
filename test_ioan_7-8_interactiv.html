@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Ioan 7-8 - Interactiv</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+        
+        .option input[type="radio"],
+        .option input[type="checkbox"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .option label {
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .matching-section {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .matching-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .matching-item select {
+            padding: 8px 12px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        
+        .matching-item-text {
+            flex: 1;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: transform 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .results {
+            background: #f0f4ff;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .score {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+        
+        .feedback {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .reset-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .reset-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Test Ioan Capitolele 7-8</h1>
+        </div>
+        
+        <div class="content">
+            <form id="testForm">
+                <!-- SECȚIUNEA I: Adevărat sau Fals -->
+                <div class="section">
+                    <div class="section-title">I. Adevărat sau Fals (20 puncte)</div>
+                    
+                    <div class="question">
+                        <div class="question-text">1. Domnul Isus nu voia să stea în Galileea, pentru că galileenii căutau să-L omoare. <span style="color: #667eea; font-style: italic;">(Ioan 7:1)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="A" id="q1a">
+                            <label for="q1a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q1" value="F" id="q1f">
+                            <label for="q1f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="1"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. Frații lui Isus credeau încă în El de la început. <span style="color: #667eea; font-style: italic;">(Ioan 7:5)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="A" id="q2a">
+                            <label for="q2a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q2" value="F" id="q2f">
+                            <label for="q2f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="2"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. Isus a strigat în ziua cea mare a praznicului: „Dacă însetează cineva, să vină la Mine și să bea." <span style="color: #667eea; font-style: italic;">(Ioan 7:37)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="A" id="q3a">
+                            <label for="q3a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q3" value="F" id="q3f">
+                            <label for="q3f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="3"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">4. Cărturarii și fariseii au adus la Domnul Isus o femeie prinsă în preacurvie. <span style="color: #667eea; font-style: italic;">(Ioan 8:3)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="A" id="q4a">
+                            <label for="q4a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q4" value="F" id="q4f">
+                            <label for="q4f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="4"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">5. Toți oamenii din Ierusalim au crezut imediat în Isus în timpul sărbătorii Corturilor. <span style="color: #667eea; font-style: italic;">(Ioan 7:31)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="A" id="q5a">
+                            <label for="q5a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q5" value="F" id="q5f">
+                            <label for="q5f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="5"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">6. Ioan a spus: „Eu sunt Lumina lumii." <span style="color: #667eea; font-style: italic;">(Ioan 8:12)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="A" id="q6a">
+                            <label for="q6a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q6" value="F" id="q6f">
+                            <label for="q6f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="6"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">7. Iudeii au vrut să-L omoare pentru că a spus: „Eu sunt Lumina lumii." <span style="color: #667eea; font-style: italic;">(Ioan 8:58-59)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="A" id="q7a">
+                            <label for="q7a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q7" value="F" id="q7f">
+                            <label for="q7f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="7"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">8. Iudeii nu credeau că Isus este mai mare decât Avraam. <span style="color: #667eea; font-style: italic;">(Ioan 8:53)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="A" id="q8a">
+                            <label for="q8a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q8" value="F" id="q8f">
+                            <label for="q8f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="8"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">9. Iudeii au vrut să-L omoare când Isus a spus: „Mai înainte ca să fie Avraam, sunt Eu." <span style="color: #667eea; font-style: italic;">(Ioan 8:58-59)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="A" id="q9a">
+                            <label for="q9a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q9" value="F" id="q9f">
+                            <label for="q9f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="9"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">10. Preoții cei mai de seamă și fariseii au trimis niște aprozi să-L prindă pe Domnul Isus. <span style="color: #667eea; font-style: italic;">(Ioan 7:32)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="A" id="q10a">
+                            <label for="q10a">Adevărat</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q10" value="F" id="q10f">
+                            <label for="q10f">Fals</label>
+                        </div>
+                        <div class="feedback" data-question="10"></div>
+                    </div>
+                </div>
+                
+                <!-- SECȚIUNEA II: Alegere multiplă -->
+                <div class="section">
+                    <div class="section-title">II. Alegere multiplă (40 puncte)</div>
+                    
+                    <div class="question">
+                        <div class="question-text">1. Cine a spus: „Niciodată n-a vorbit vreun om ca omul acesta"? <span style="color: #667eea; font-style: italic;">(Ioan 7:46)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q11" value="a" id="q11a">
+                            <label for="q11a">a. Fariseii</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q11" value="b" id="q11b">
+                            <label for="q11b">b. Aprozii</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q11" value="c" id="q11c">
+                            <label for="q11c">c. Ucenicii</label>
+                        </div>
+                        <div class="feedback" data-question="11"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. Ce i-au spus unii dintre iudei când L-au auzit pe Isus? <span style="color: #667eea; font-style: italic;">(Ioan 7:41)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q12" value="a" id="q12a">
+                            <label for="q12a">a. „Nu poate veni Hristos din Galileea"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q12" value="b" id="q12b">
+                            <label for="q12b">b. „Acesta este prorocul"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q12" value="c" id="q12c">
+                            <label for="q12c">c. „Este fiul lui Avraam"</label>
+                        </div>
+                        <div class="feedback" data-question="12"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. La ce sărbătoare a urcat Isus la Ierusalim în Ioan 7? <span style="color: #667eea; font-style: italic;">(Ioan 7:2,10)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q13" value="a" id="q13a">
+                            <label for="q13a">a. Paștele</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q13" value="b" id="q13b">
+                            <label for="q13b">b. Corturilor</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q13" value="c" id="q13c">
+                            <label for="q13c">c. Rusaliile</label>
+                        </div>
+                        <div class="feedback" data-question="13"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">4. Ce a spus Isus despre sine când iudeii L-au întrebat despre Avraam? <span style="color: #667eea; font-style: italic;">(Ioan 8:58)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q14" value="a" id="q14a">
+                            <label for="q14a">a. „Eu sunt Lumina lumii"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q14" value="b" id="q14b">
+                            <label for="q14b">b. „Înainte, sunt Eu"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q14" value="c" id="q14c">
+                            <label for="q14c">c. „Nu știți nimic"</label>
+                        </div>
+                        <div class="feedback" data-question="14"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">5. Ce le-a spus Isus celor care Îl urmează pe El? <span style="color: #667eea; font-style: italic;">(Ioan 8:12)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q15" value="a" id="q15a">
+                            <label for="q15a">a. „Vor avea lumina vieții"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q15" value="b" id="q15b">
+                            <label for="q15b">b. „Vor fi scutiți de încercări"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q15" value="c" id="q15c">
+                            <label for="q15c">c. „Vor fi protejați mereu"</label>
+                        </div>
+                        <div class="feedback" data-question="15"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">6. Unde s-a desfășurat episodul cu femeia prinsă în adulter? <span style="color: #667eea; font-style: italic;">(Ioan 8:2-4)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q16" value="a" id="q16a">
+                            <label for="q16a">a. În Templu</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q16" value="b" id="q16b">
+                            <label for="q16b">b. Pe Muntele Măslinilor</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q16" value="c" id="q16c">
+                            <label for="q16c">c. În Capernaum</label>
+                        </div>
+                        <div class="feedback" data-question="16"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">7. Cum au reacționat fariseii după ce Isus a spus „Cine dintre voi este fără păcat…"? <span style="color: #667eea; font-style: italic;">(Ioan 8:9)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q17" value="a" id="q17a">
+                            <label for="q17a">a. L-au luat la întrebări</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q17" value="b" id="q17b">
+                            <label for="q17b">b. Au plecat unul câte unul</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q17" value="c" id="q17c">
+                            <label for="q17c">c. L-au prins</label>
+                        </div>
+                        <div class="feedback" data-question="17"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">8. Ce a spus Isus despre adevăr? <span style="color: #667eea; font-style: italic;">(Ioan 8:32)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q18" value="a" id="q18a">
+                            <label for="q18a">a. „Cine păzește adevărul va fi fericit"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q18" value="b" id="q18b">
+                            <label for="q18b">b. „Adevărul vă va face slobozi"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q18" value="c" id="q18c">
+                            <label for="q18c">c. „Adevărul este întotdeauna biruitor"</label>
+                        </div>
+                        <div class="feedback" data-question="18"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">9. Ce au zis unii iudei despre Isus la Templu? <span style="color: #667eea; font-style: italic;">(Ioan 8:48)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q19" value="a" id="q19a">
+                            <label for="q19a">a. „Are drac"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q19" value="b" id="q19b">
+                            <label for="q19b">b. „Este Hristosul"</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q19" value="c" id="q19c">
+                            <label for="q19c">c. „Este nevinovat"</label>
+                        </div>
+                        <div class="feedback" data-question="19"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">10. Când a strigat Domnul Isus cuvintele "Dacă însetează cineva, să vină la Mine și să bea"? <span style="color: #667eea; font-style: italic;">(Ioan 7:37)</span></div>
+                        <div class="option">
+                            <input type="radio" name="q20" value="a" id="q20a">
+                            <label for="q20a">a. În timpul praznicului, în cea de-a treia zi</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q20" value="b" id="q20b">
+                            <label for="q20b">b. În prima zi a praznicului</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="q20" value="c" id="q20c">
+                            <label for="q20c">c. În ziua de pe urmă a praznicului</label>
+                        </div>
+                        <div class="feedback" data-question="20"></div>
+                    </div>
+                </div>
+                
+                <!-- SECȚIUNEA III: Asociere -->
+                <div class="section">
+                    <div class="section-title">III. Asociere (10 puncte)</div>
+                    <p style="margin-bottom: 20px; color: #666;">Asociați persoanele/grupurile (A-E) cu afirmațiile corespunzătoare (1-5):</p>
+                    
+                    <div class="matching-section">
+                        <div class="matching-item">
+                            <select name="q21" id="q21">
+                                <option value="">Alege...</option>
+                                <option value="A">A. Fariseii</option>
+                                <option value="B">B. Mulțimea</option>
+                                <option value="C">C. Aprozii</option>
+                                <option value="D">D. Niște locuitori din Ierusalim</option>
+                                <option value="E">E. Isus</option>
+                            </select>
+                            <span class="matching-item-text">1. Au spus "Când va veni Hristosul, nimeni nu va ști de unde este" <span style="color: #667eea; font-style: italic;">(Ioan 7:25-27)</span></span>
+                        </div>
+                        <div class="feedback" data-question="21"></div>
+                        
+                        <div class="matching-item">
+                            <select name="q22" id="q22">
+                                <option value="">Alege...</option>
+                                <option value="A">A. Fariseii</option>
+                                <option value="B">B. Mulțimea</option>
+                                <option value="C">C. Aprozii</option>
+                                <option value="D">D. Niște locuitori din Ierusalim</option>
+                                <option value="E">E. Isus</option>
+                            </select>
+                            <span class="matching-item-text">2. Au voit să-L prindă, dar nu au putut <span style="color: #667eea; font-style: italic;">(Ioan 7:44-46)</span></span>
+                        </div>
+                        <div class="feedback" data-question="22"></div>
+                        
+                        <div class="matching-item">
+                            <select name="q23" id="q23">
+                                <option value="">Alege...</option>
+                                <option value="A">A. Fariseii</option>
+                                <option value="B">B. Mulțimea</option>
+                                <option value="C">C. Aprozii</option>
+                                <option value="D">D. Niște locuitori din Ierusalim</option>
+                                <option value="E">E. Isus</option>
+                            </select>
+                            <span class="matching-item-text">3. Au fost uimiți de învățătura lui Isus <span style="color: #667eea; font-style: italic;">(Ioan 7:46)</span></span>
+                        </div>
+                        <div class="feedback" data-question="23"></div>
+                        
+                        <div class="matching-item">
+                            <select name="q24" id="q24">
+                                <option value="">Alege...</option>
+                                <option value="A">A. Fariseii</option>
+                                <option value="B">B. Mulțimea</option>
+                                <option value="C">C. Aprozii</option>
+                                <option value="D">D. Niște locuitori din Ierusalim</option>
+                                <option value="E">E. Isus</option>
+                            </select>
+                            <span class="matching-item-text">4. Au spus "Norodul acesta, care nu știe Legea, este blestemat!" <span style="color: #667eea; font-style: italic;">(Ioan 7:47-49)</span></span>
+                        </div>
+                        <div class="feedback" data-question="24"></div>
+                        
+                        <div class="matching-item">
+                            <select name="q25" id="q25">
+                                <option value="">Alege...</option>
+                                <option value="A">A. Fariseii</option>
+                                <option value="B">B. Mulțimea</option>
+                                <option value="C">C. Aprozii</option>
+                                <option value="D">D. Niște locuitori din Ierusalim</option>
+                                <option value="E">E. Isus</option>
+                            </select>
+                            <span class="matching-item-text">5. A vorbit despre cei care însetează și vor veni la El <span style="color: #667eea; font-style: italic;">(Ioan 7:37)</span></span>
+                        </div>
+                        <div class="feedback" data-question="25"></div>
+                    </div>
+                </div>
+                
+                <!-- SECȚIUNEA IV: Variante multiple -->
+                <div class="section">
+                    <div class="section-title">IV. Răspuns multiplu (15 puncte)</div>
+                    <p style="margin-bottom: 20px; color: #666;">Selectați toate răspunsurile corecte:</p>
+                    
+                    <div class="question">
+                        <div class="question-text">1. De unde vine porunca privitoare la tăierea împrejur? <span style="color: #667eea; font-style: italic;">(Ioan 7:22)</span></div>
+                        <div class="option">
+                            <input type="checkbox" name="q26" value="a" id="q26a">
+                            <label for="q26a">a. De la Domnul Isus</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="q26" value="b" id="q26b">
+                            <label for="q26b">b. De la Moise</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="q26" value="c" id="q26c">
+                            <label for="q26c">c. De la patriarhi</label>
+                        </div>
+                        <div class="feedback" data-question="26"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. Ce i-au spus lui Nicodim cei care încercau să-L prindă pe Isus? <span style="color: #667eea; font-style: italic;">(Ioan 7:50-52)</span></div>
+                        <div class="option">
+                            <input type="checkbox" name="q27" value="a" id="q27a">
+                            <label for="q27a">a. "Legea noastră osândește ea pe un om înainte ca să-l asculte și să știe ce face?"</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="q27" value="b" id="q27b">
+                            <label for="q27b">b. "Din Galileea nu s-a ridicat niciun proroc"</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="q27" value="c" id="q27c">
+                            <label for="q27c">c. L-au întrebat dacă și el este din Galileea</label>
+                        </div>
+                        <div class="feedback" data-question="27"></div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. Cum au reacționat oamenii după ce Isus a spus „Cine dintre voi este fără păcat…"? <span style="color: #667eea; font-style: italic;">(Ioan 8:9)</span></div>
+                        <div class="option">
+                            <input type="checkbox" name="q28" value="a" id="q28a">
+                            <label for="q28a">a. Au plecat unul câte unul</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="q28" value="b" id="q28b">
+                            <label for="q28b">b. Au început să-și mărturisească păcatele</label>
+                        </div>
+                        <div class="option">
+                            <input type="checkbox" name="q28" value="c" id="q28c">
+                            <label for="q28c">c. S-au simțit mustrați</label>
+                        </div>
+                        <div class="feedback" data-question="28"></div>
+                    </div>
+                </div>
+                
+                <button type="button" class="submit-btn" onclick="checkAnswers()">Verifică răspunsurile</button>
+            </form>
+            
+            <div class="results" id="results">
+                <h2>Rezultatul testului</h2>
+                <div class="score" id="score"></div>
+                <p id="message"></p>
+                <button class="reset-btn" onclick="resetTest()">Încearcă din nou</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Răspunsuri corecte
+        const answers = {
+            q1: 'F',
+            q2: 'F',
+            q3: 'A',
+            q4: 'A',
+            q5: 'F',
+            q6: 'F',
+            q7: 'F',
+            q8: 'A',
+            q9: 'A',
+            q10: 'A',
+            q11: 'b',
+            q12: 'a',
+            q13: 'b',
+            q14: 'b',
+            q15: 'a',
+            q16: 'a',
+            q17: 'b',
+            q18: 'b',
+            q19: 'a',
+            q20: 'c',
+            q21: 'D',
+            q22: 'B',
+            q23: 'C',
+            q24: 'A',
+            q25: 'E',
+            q26: ['c'],
+            q27: ['b', 'c'],
+            q28: ['a', 'c']
+        };
+        
+        function checkAnswers() {
+            let score = 0;
+            let totalPoints = 85;
+            
+            // Verifică întrebările cu un singur răspuns (q1-q25)
+            for (let i = 1; i <= 25; i++) {
+                const questionName = 'q' + i;
+                const userAnswer = document.querySelector(`input[name="${questionName}"]:checked`) || 
+                                   document.querySelector(`select[name="${questionName}"]`);
+                const feedback = document.querySelector(`.feedback[data-question="${i}"]`);
+                
+                if (userAnswer) {
+                    const answer = userAnswer.value;
+                    if (answer === answers[questionName]) {
+                        let points = i <= 10 ? 2 : (i <= 20 ? 4 : 2);
+                        score += points;
+                        feedback.textContent = `✓ Corect! (+${points} puncte)`;
+                        feedback.className = 'feedback show correct';
+                    } else {
+                        feedback.textContent = `✗ Greșit. Răspunsul corect: ${answers[questionName]}`;
+                        feedback.className = 'feedback show incorrect';
+                    }
+                } else {
+                    feedback.textContent = '⚠ Nu ai răspuns la această întrebare.';
+                    feedback.className = 'feedback show incorrect';
+                }
+            }
+            
+            // Verifică întrebările cu răspuns multiplu (q26-q28)
+            for (let i = 26; i <= 28; i++) {
+                const questionName = 'q' + i;
+                const checkboxes = document.querySelectorAll(`input[name="${questionName}"]:checked`);
+                const userAnswers = Array.from(checkboxes).map(cb => cb.value).sort();
+                const correctAnswers = answers[questionName].sort();
+                const feedback = document.querySelector(`.feedback[data-question="${i}"]`);
+                
+                if (JSON.stringify(userAnswers) === JSON.stringify(correctAnswers)) {
+                    score += 5;
+                    feedback.textContent = '✓ Corect! (+5 puncte)';
+                    feedback.className = 'feedback show correct';
+                } else {
+                    feedback.textContent = `✗ Greșit. Răspunsurile corecte: ${correctAnswers.join(', ')}`;
+                    feedback.className = 'feedback show incorrect';
+                }
+            }
+            
+            // Afișează rezultatul
+            const percentage = Math.round((score / totalPoints) * 100);
+            document.getElementById('score').textContent = `${score} / ${totalPoints} puncte (${percentage}%)`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = '🌟 Excelent! Cunoști foarte bine capitolele 7-8 din Ioan!';
+            } else if (percentage >= 75) {
+                message = '👍 Foarte bine! Ai o înțelegere solidă a textului!';
+            } else if (percentage >= 60) {
+                message = '📖 Bine! Mai citește o dată capitolele pentru o înțelegere mai profundă.';
+            } else {
+                message = '💪 Continuă să studiezi! Recitește capitolele 7-8 din Ioan.';
+            }
+            
+            document.getElementById('message').textContent = message;
+            document.getElementById('results').classList.add('show');
+            
+            // Scroll la rezultate
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetTest() {
+            document.getElementById('testForm').reset();
+            document.getElementById('results').classList.remove('show');
+            
+            // Ascunde toate feedback-urile
+            const feedbacks = document.querySelectorAll('.feedback');
+            feedbacks.forEach(fb => {
+                fb.classList.remove('show', 'correct', 'incorrect');
+                fb.textContent = '';
+            });
+            
+            // Scroll la început
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
